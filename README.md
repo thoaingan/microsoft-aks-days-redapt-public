@@ -20,6 +20,10 @@
    1. [Primitives (Deployments / Services / Pods / etc)](03_primitives_scheduling_deployments/01_k8s_primitives.md)
    2. [RBAC / Service Accounts](03_primitives_scheduling_deployments/02_rbac.md)
 4. [Demo Application Deployment](04_demo_app_deployment)
+   1. [Deployments](04_demo_app_deployment/01_deployments.md)
+   2. [Services](04_demo_app_deployment/02_services.md)
+   3. [Ingress](04_demo_app_deployment/03_ingress.md)
+   4. Pod Security
 5. [Cluster Operations](05_cluster_ops)
    1. [Resources (Limits / Requests)](05_cluster_ops/01_resources.md)
    2. [NodeSelector/Affinity/Anti-Affinity](05_cluster_ops/02_selector_affinity_antiaffinity.md)
