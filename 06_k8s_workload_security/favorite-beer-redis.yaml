@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: aksday-favorite-beer-redis
+  labels:
+    app: favorite-beer-redis
+    chart: favorite-beer-0.1.0
+    release: aksday
+    heritage: Tiller
+spec:
+  serviceName: aksday-favorite-beer-redis
+  replicas: 1
+  selector:
+    matchLabels:
+      app: favorite-beer-redis
+      release: aksday
+  template:
+    metadata:
+      labels:
+        app: favorite-beer-redis
+        release: aksday
+    spec:
+      # Disable Kubernetes API Server Access - even to the discovery APIs
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 2000       
+      containers:
+      - name: favorite-beer-redis
+        image: "redaptcloud/redis:3.2-alpine"
+        imagePullPolicy: IfNotPresent
+
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - NET_BIND_SERVICE
+            drop:
+            - all
+          runAsNonRoot: true         
+          # Enable this while you carefully examine the application functionality
+          readOnlyRootFilesystem: true        
+
+        ports:
+        - containerPort: 6379
+          name: redis
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      #storageClassName: managed-premium
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
