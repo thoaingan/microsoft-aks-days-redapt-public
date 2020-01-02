@@ -20,10 +20,8 @@ metadata:
   name: favorite-beer
   labels:
     app: favorite-beer
-    chart: favorite-beer-0.1.0
-    heritage: Tiller
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: favorite-beer
@@ -38,16 +36,14 @@ spec:
         fsGroup: 2000      
       containers:
         - name: favorite-beer
-          image: "redaptcloud/favorite-beer:v1"
+          image: redaptcloud/favorite-beer:v1
           env:
           - name: REDIS_HOST
-            value: favorite-beer-redis
+            value: "favorite-beer-redis"
           - name: REDIS_PORT
             value: "6379"
           - name: SERVICE_SETTINGS_PATH
-            value: /etc/config/servicesettings.json
-          imagePullPolicy: IfNotPresent
-
+            value: "/etc/config/servicesettings.json"
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -85,12 +81,12 @@ spec:
               memory: 128Mi
             
           volumeMounts:
-          - name: config-volume
+          - name: favorite-beer-config-volume
             mountPath: /etc/config
       volumes:
-        - name: config-volume
+        - name: favorite-beer-config-volume
           configMap:
-            name: favorite-beer-settings
+            name: favorite-beer
 ```
 
 ## Hardening our Application Database (Redis)
@@ -105,9 +101,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: favorite-beer-redis
-  labels:
-    app: favorite-beer-redis
-    chart: favorite-beer-0.1.0
 spec:
   serviceName: favorite-beer-redis
   replicas: 1
@@ -127,7 +120,7 @@ spec:
         fsGroup: 2000       
       containers:
       - name: favorite-beer-redis
-        image: "redaptcloud/redis:3.2-alpine"
+        image: redaptcloud/redis:3.2-alpine
         imagePullPolicy: IfNotPresent
 
         securityContext:
@@ -151,7 +144,7 @@ spec:
   - metadata:
       name: redis-data
     spec:
-      #storageClassName: managed-premium
+      storageClassName: managed-premium
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
