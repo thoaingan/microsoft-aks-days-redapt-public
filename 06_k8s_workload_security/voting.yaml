@@ -45,7 +45,8 @@ spec:
   - metadata:
       name: redis-data
     spec:
-      storageClassName: managed-premium
+      #storageClassName: managed-premium
+      #storageClassName: standard
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:

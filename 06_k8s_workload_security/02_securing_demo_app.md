@@ -1,6 +1,6 @@
 # Securing Our Demo Application
 
-Lets try to apply one or more of the security controls/knobs to our **favorite beer**
+Lets try to apply one or more of the security controls/knobs to our **favorite beer** app
 
 >Hardening is an iterative process --> at some point, adding a control will break our application
 
