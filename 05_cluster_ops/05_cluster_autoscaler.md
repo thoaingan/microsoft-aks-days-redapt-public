@@ -31,7 +31,7 @@ az aks nodepool scale \
 az aks nodepool update \
   --resource-group jm-rgp \
   --cluster-name jm-cluster \
-  --name agentpool \
+  --name nodepool2 \
   --enable-cluster-autoscaler \
   --min-count 3 \
   --max-count 5
