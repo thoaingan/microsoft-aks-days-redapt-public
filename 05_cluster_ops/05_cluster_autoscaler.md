@@ -13,13 +13,27 @@ https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools#scale-a-node-
 
 Once deployed, you can create seperate node pools and set independent scale rules.
 
+
 ```
+az aks nodepool add \
+  --resource-group jm-rgp \
+  --cluster-name jm-cluster \
+  --name nodepool2 \
+  --node-count 3 
+
+az aks nodepool scale \
+    --resource-group jm-rgp \
+    --cluster-name jm-cluster \
+    --name nodepool2 \
+    --node-count 5 \
+    --no-wait
+
 az aks nodepool update \
   --resource-group jm-rgp \
   --cluster-name jm-cluster \
   --name agentpool \
   --enable-cluster-autoscaler \
-  --min-count 1 \
-  --node-count 3 \
+  --min-count 3 \
   --max-count 5
+
 ```
