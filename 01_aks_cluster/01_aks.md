@@ -51,12 +51,11 @@ After performing the steps above, you should be able to run the following comman
 `kubectl get pods --all-namespaces`
 
 
-## Creating Node Pools 
+## Creating/Scaling Node Pools 
 
 The Azure Portal UI has some limitations, in terms of managing the node pools, as much of the functionality is in preview. Its recomended to get familiar with the az cli approach.
 
 https://docs.microsoft.com/en-us/cli/azure/ext/aks-preview/aks/nodepool?view=azure-cli-latest#ext-aks-preview-az-aks-nodepool-add
-
 
 ## Enabling SSH
 

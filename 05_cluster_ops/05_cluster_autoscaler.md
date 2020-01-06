@@ -4,8 +4,6 @@ In general, the cluster autoscaler is responsible for scaling up and down the un
 
 The cluster auto scaler is generally implemented by the IaaS provider, for cloud deployments. There are autoscalers that connect to on-premise vm provisioning systems, to scale out that way as well.
 
-Sorry, there is no minikube equivalent for this level.
-
 ## AKS
 
 For AKS, they have special instructions for deploying this to your cluster:
@@ -17,10 +15,10 @@ Once deployed, you can create seperate node pools and set independent scale rule
 
 ```
 az aks nodepool update \
-  --resource-group myResourceGroup \
-  --cluster-name myAKSCluster \
-  --name nodepool1 \
-  --update-cluster-autoscaler \
+  --resource-group jm-rgp \
+  --cluster-name jm-cluster \
+  --name agentpool \
+  --enable-cluster-autoscaler \
   --min-count 1 \
   --max-count 5
 ```
