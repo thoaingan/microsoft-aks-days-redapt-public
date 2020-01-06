@@ -21,22 +21,27 @@ In this section, we will walk through setting up an AKS cluster, which you can u
 	- ![image_03](aks_images/image_03.png)
 5. Fill in appropriate information for the Basic Tab
 	- ![image_04](aks_images/image_04.png)
+6. Fill in appropriate information for the Scale Tab
 	- ![image_05](aks_images/image_05.png)
-6. Fill in the appropriate information for the Authentication Tab
+7. Fill in the appropriate information for the Authentication Tab
 	- ![image_06](aks_images/image_06.png)
-6. Fill in the appropriate information for the Networking Tab
+8. Fill in the appropriate information for the Networking Tab
 	- ![image_07](aks_images/image_07.png)
-6. Fill in the appropriate information for the Monitoring Tab
+9. Fill in the appropriate information for the Monitoring Tab
 	- ![image_08](aks_images/image_08.png)
-7. Add any tags, you feel may be appropriate in the Tags Tab.
-8. Click "Review + Create" Tab and then Click "Create"
+10. Add any tags, you feel may be appropriate in the Tags Tab.
 	- ![image_09](aks_images/image_09.png)
-9. This can take about 30-45 minutes to complete, and you should be able to see your cluster.
+11. Click "Review + Create" Tab and then allow it to Validate
 	- ![image_10](aks_images/image_10.png)
-10. Click on your cluster, and in the Overview Tab, click "View Kubernetes Dashboard".
-11. In your command line, type `az login` and follow the instructions.
-12. Run `az aks install-cli` to install `kubectl` into your local environment.
-13. Run `az aks get-credentials` with your flags to set the kubectl context.
+12. Once validation has passed, click Create
+    - ![image_11](aks_images/image_11.png)
+13. This can take about 30-45 minutes to complete, and you should be able to see your cluster.
+	- ![image_12](aks_images/image_12.png)
+14. Click on your cluster, and then the Overview Tab.
+	- ![image_13](aks_images/image_13.png)
+15. In your command line, type `az login` and follow the instructions.
+16. Run `az aks install-cli` to install `kubectl` into your local environment.
+17. Run `az aks get-credentials` with your flags to set the kubectl context.
 
 
 ## Validate
