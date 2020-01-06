@@ -20,5 +20,6 @@ az aks nodepool update \
   --name agentpool \
   --enable-cluster-autoscaler \
   --min-count 1 \
+  --node-count 3 \
   --max-count 5
 ```
