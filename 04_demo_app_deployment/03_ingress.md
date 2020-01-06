@@ -286,20 +286,20 @@ If you enabled it during the setup, AKS will come with a predefined ingress cont
 
 https://docs.microsoft.com/en-us/azure/aks/http-application-routing
 
+With that enabled, you can run the following to see an example working:
+
 ```
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: party-clippy
-  annotations:
-    kubernetes.io/ingress.class: addon-http-application-routing
-spec:
-  rules:
-  - host: party-clippy.<CLUSTER_SPECIFIC_DNS_ZONE>
-    http:
-      paths:
-      - backend:
-          serviceName: party-clippy
-          servicePort: 80
-        path: /
+kubectl apply -f http_lb_example.yaml 
+```
+
+Once this is up, you can get the ip by running:
+
+```
+kubectl get svc
+```
+
+Add this ip to your /etc/hosts or pass the host header via curl:
+
+```
+curl <yourIngressIP> -H "Host: foo.example.com"
 ```
