@@ -10,3 +10,17 @@ Sorry, there is no minikube equivalent for this level.
 
 For AKS, they have special instructions for deploying this to your cluster:
 https://docs.microsoft.com/en-us/azure/aks/autoscaler
+
+https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools#scale-a-node-pool
+
+Once deployed, you can create seperate node pools and set independent scale rules.
+
+```
+az aks nodepool update \
+  --resource-group myResourceGroup \
+  --cluster-name myAKSCluster \
+  --name nodepool1 \
+  --update-cluster-autoscaler \
+  --min-count 1 \
+  --max-count 5
+```
