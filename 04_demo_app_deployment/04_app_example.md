@@ -2,6 +2,31 @@
 
 Start by taking a look at the application in the `voting` directory of this folder.
 
+You can build it using the following command(s), but you should use the name of your registry, which we created earlier, in place of `redaptregistry`, **every place it occurs in this document**. 
+
+**From the voting directory in this folder.**
+
+### Build & Push the App Container
+
+`docker build . -t redaptregistry.azurecr.io/favorite-beer:v1`
+
+`docker tag redaptregistry.azurecr.io/favorite-beer:v1 redaptregistry.azurecr.io/favorite-beer:latest`
+
+`docker push redaptregistry.azurecr.io/favorite-beer:v1`
+`docker push redaptregistry.azurecr.io/favorite-beer:latest`
+
+### Download & Push the Redis Container
+
+`docker pull redis:3.2-alpine`
+
+`docker tag redis:3.2-alpine redaptregistry.azurecr.io/redis:3.2-alpine`
+
+`docker push redaptregistry.azurecr.io/redis:3.2-alpine`
+
+### Attach the Registry to our Cluster
+
+`az aks update -n jm-cluster -g jm-rgp --attach-acr redaptregistry`
+
 ## Setting Up Redis
 
 Since redis is a dependency of our app, we should deploy it first. The recommended way is via `StatefulSet`
@@ -60,7 +85,7 @@ spec:
     spec:
       containers:
       - name: favorite-beer-redis
-        image: redaptcloud/redis:3.2-alpine
+        image: redaptregistry.azurecr.io/redis:3.2-alpine
         command: ["redis-server"]
         args: ["--appendonly", "yes"]
         ports:
@@ -141,7 +166,7 @@ spec:
     spec:
       containers:
       - name: favorite-beer-redis
-        image: redaptcloud/redis:3.2-alpine
+        image: redaptregistry.azurecr.io/redis:3.2-alpine
         ports:
         - containerPort: 6379
           name: redis
@@ -198,7 +223,7 @@ spec:
     spec:
       containers:
       - name: favorite-beer-redis
-        image: redaptcloud/redis:3.2-alpine
+        image: redaptregistry.azurecr.io/redis:3.2-alpine
         ports:
         - containerPort: 6379
           name: redis
@@ -306,7 +331,7 @@ spec:
     spec:
       containers:
       - name: favorite-beer
-        image: redaptcloud/favorite-beer:v1
+        image: redaptregistry.azurecr.io/favorite-beer:v1
         env:
         - name: REDIS_HOST
           value: "favorite-beer-redis"
@@ -374,7 +399,7 @@ spec:
     spec:
       containers:
       - name: favorite-beer
-        image: redaptcloud/favorite-beer:v1
+        image: redaptregistry.azurecr.io/favorite-beer:v1
         env:
         - name: REDIS_HOST
           value: "favorite-beer-redis"
@@ -382,6 +407,8 @@ spec:
           value: "6379"
         - name: SERVICE_SETTINGS_PATH
           value: "/etc/config/servicesettings.json"
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"
         ports:
         - name: http
           containerPort: 80
@@ -438,3 +465,18 @@ favorite-beer         LoadBalancer   10.0.47.83     13.64.173.174   80:31650/TCP
 
 Note the LoadBalancer IP (13.64.173.174, in this example) Azure assigned to the Azure Load Balancer it attached to your AKS nodes. Put whichever IP Azure assigned for _your_ Load Balancer into your browser and you should see the "Favorite Beer" app working.
 
+
+### All at Once
+
+We have pre-staged all of the relevant resources mentioned above, into the voting.yaml file.
+
+`kubectl apply -f k8s/voting.yaml`
+
+
+### Poke Around
+
+`kubectl get pods`
+
+`kubectl get services`
+
+`kubectl get pvc`

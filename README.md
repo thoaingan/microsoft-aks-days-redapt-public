@@ -10,6 +10,7 @@
 1. [AKS Cluster)](01_aks_cluster)
    1. [AKS](01_aks_cluster/01_aks.md)
    2. [kubectl](01_aks_cluster/02_kubectl.md)
+   3. [Container Registry](01_aks_cluster/03_container_registry.md)
 2. [Kubernetes Moving Parts](02_kubernetes_moving_parts)
    1. [ETCD](02_kubernetes_moving_parts/01_etcd.md)
    2. [Kubernetes API](02_kubernetes_moving_parts/02_kubernetes_api.md)

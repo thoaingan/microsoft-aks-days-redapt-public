@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: favorite-beer-redis
-        image: redaptcloud/redis:3.2-alpine
+        image: redaptregistry.azurecr.io/redis:3.2-alpine
         command: ["redis-server"]
         args: ["--appendonly", "yes"]
         ports:
@@ -54,7 +54,7 @@ spec:
     spec:
       containers:
       - name: favorite-beer
-        image: redaptcloud/favorite-beer:v1
+        image: redaptregistry.azurecr.io/favorite-beer:v1
         env:
         - name: REDIS_HOST
           value: "favorite-beer-redis"

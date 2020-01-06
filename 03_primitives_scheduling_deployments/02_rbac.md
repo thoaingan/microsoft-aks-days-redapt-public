@@ -7,7 +7,10 @@ Role-based access control (RBAC) is a method of regulating access to computer or
 
 NOTE: Kubernetes has additional primitives which are specific to RBAC, and have been GA since version 1.8.
 
-See: [RBAC Official Docs](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+See: 
+- [RBAC Official Docs](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+- [AKS AD Integration](https://docs.microsoft.com/en-us/azure/aks/azure-ad-rbac)
+
 
 #### Role
 

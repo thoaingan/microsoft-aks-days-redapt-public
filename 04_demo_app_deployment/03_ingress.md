@@ -279,3 +279,27 @@ Events:
 ```
 
 Note: You can achieve the same by invoking `kubectl replace -f` on a modified Ingress YAML file. In fact, this is a much better way, as you can keep track of changes in version/revision control.
+
+### Azure HTTP LoadBalancing Add-On
+
+If you enabled it during the setup, AKS will come with a predefined ingress controller, that will use Azure's http load balancing capability.
+
+https://docs.microsoft.com/en-us/azure/aks/http-application-routing
+
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: party-clippy
+  annotations:
+    kubernetes.io/ingress.class: addon-http-application-routing
+spec:
+  rules:
+  - host: party-clippy.<CLUSTER_SPECIFIC_DNS_ZONE>
+    http:
+      paths:
+      - backend:
+          serviceName: party-clippy
+          servicePort: 80
+        path: /
+```

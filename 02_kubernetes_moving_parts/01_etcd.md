@@ -3,7 +3,6 @@ etcd is an open-source, distributed, key-value store, developed by CoreOS. etcd 
 
 It has a raft storage mechanism, running fewer nodes gives better performance, but sacrifices HA. You should aim to use the least ammount of nodes, with a minimum of 3 **OR** 5. The OR is important, because running 4 nodes, gives you very little advantage over running 3, in both cases, you can only tolerate 1 node failure. In order to achieve a two node failure tolerance, at least 5 nodes are necessary, and so on focusing on maintaing a "Quorum" or majority.
 
-<Insert ETCD Quorum Visual Aid>
 
 ## Demo
 
@@ -161,29 +160,6 @@ etcd authenticates via certificate, both to add/remove data and for members join
 
 Generating Self-Signed Certs for etcd is outside the scope of this workshop, but the general premise is here, for setting up authentication backed etcd cluster.
 https://github.com/coreos/etcd/tree/master/hack/tls-setup
-
-### etcd2
-Older deployments of Kubernetes may still use etcd2, and its important to know that breaking changes were made between version 2 and 3. There are viable upgrade paths for users that want to preserve cluster data, from legacy clusters, pre-etcd3. 
-
-You will need to set the `HostIP` environment var, if not already set, prior to running the following commands, in a bash context. You should also run the steps for clean up, before bring up this version of etcd, in the same local environment.
-
-`export HostIP=$(ipconfig getifaddr en0)`
-
-```
-docker run -v $(pwd)/data:/var/lib/etcd2 -d -p 4001:4001 -p 2380:2380 -p 2379:2379 \
- --name etcd quay.io/coreos/etcd:v2.3.8 \
- --data-dir=/var/lib/etcd2 \
- -name etcd0 \
- -advertise-client-urls http://${HostIP}:2379,http://${HostIP}:4001 \
- -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
- -initial-advertise-peer-urls http://${HostIP}:2380 \
- -listen-peer-urls http://0.0.0.0:2380 \
- -initial-cluster-token etcd-cluster-1 \
- -initial-cluster etcd0=http://${HostIP}:2380 \
- -initial-cluster-state new
-```
-
-`docker run -it tenstartups/etcdctl -C http://${HostIP}:2379 member list` <We use bash and start an interactive session.>
 
 ### Clean Up
 

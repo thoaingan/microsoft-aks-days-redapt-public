@@ -25,7 +25,7 @@ metadata:
   name: my-service1
 spec:
   selector:
-    app: MyApp
+    app: nginx
   ports:
   - protocol: TCP
     port: 80
@@ -47,7 +47,7 @@ metadata:
   name: my-service2
 spec:
   selector:
-    app: MyApp
+    app: nginx
   ports:
   - protocol: TCP
     port: 80
@@ -65,7 +65,7 @@ metadata:
   name: my-service3
 spec:
   selector:
-    app: MyApp
+    app: nginx
   ports:
   - protocol: TCP
     port: 80
