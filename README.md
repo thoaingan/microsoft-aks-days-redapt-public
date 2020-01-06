@@ -25,7 +25,7 @@
    2. [Services](04_demo_app_deployment/02_services.md)
    3. [Ingress](04_demo_app_deployment/03_ingress.md)
    4. [Application Example](04_demo_app_deployment/04_app_example.md)
-   5. [Application Example](04_demo_app_deployment/05_application_logging.md)
+   5. [Application Logging/Analytics](04_demo_app_deployment/05_application_logging.md)
 5. [Cluster Operations](05_cluster_ops)
    1. [Resources (Limits / Requests)](05_cluster_ops/01_resources.md)
    2. [NodeSelector/Affinity/Anti-Affinity](05_cluster_ops/02_selector_affinity_antiaffinity.md)
