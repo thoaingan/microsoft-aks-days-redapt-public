@@ -10,7 +10,7 @@ In this section, we will walk through setting up an AKS cluster, which you can u
 1. You need to have access to an existing Azure subscription.
 2. You will need to install the latest `azure-cli` tool. `azure-cli (2.0.45)`
 
-## Steps
+## Steps for this Workshop
 
 1. Log into the Azure Portal Dashboard
 2. Click on "All services" in the top left corner.
@@ -40,9 +40,17 @@ In this section, we will walk through setting up an AKS cluster, which you can u
 14. Click on your cluster, and then the Overview Tab.
 	- ![image_13](aks_images/image_13.png)
 15. In your command line, type `az login` and follow the instructions.
-16. Run `az aks install-cli` to install `kubectl` into your local environment.
-17. Run `az aks get-credentials` with your flags to set the kubectl context.
+16. Run `az aks install-cli` to install `kubectl` into your local environment. **Note: If you are using Azure Cloud Shell, you can skip this step.**
+17. Run `az aks get-credentials -n jm-cluster -g jm-rgp` with your flags to set the kubectl context.
 
+
+**Running into issues kicking off the process due to unique restrictions?**
+
+The az cli tool, allows for additional options to be configured.
+https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-create
+
+If the issues are network related, this information is helpful for troubleshooting/identifying network setup issues.
+https://docs.microsoft.com/en-us/azure/aks/configure-kubenet
 
 ## Validate
 

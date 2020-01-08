@@ -9,19 +9,27 @@ You can build it using the following command(s), but you should use the name of 
 ### Build & Push the App Container
 
 `docker build . -t redaptregistry.azurecr.io/favorite-beer:v1`
-
 `docker tag redaptregistry.azurecr.io/favorite-beer:v1 redaptregistry.azurecr.io/favorite-beer:latest`
-
 `docker push redaptregistry.azurecr.io/favorite-beer:v1`
 `docker push redaptregistry.azurecr.io/favorite-beer:latest`
 
+##### Using Azure Cli
+
+`az acr build -t favorite-beer:v1 -t favorite-beer:latest --registry redaptregistry --file Dockerfile .`
+
 ### Download & Push the Redis Container
 
+You should choose only **one** of the options below, for building the container.
+
+##### Using Docker Cli
+
 `docker pull redis:3.2-alpine`
-
 `docker tag redis:3.2-alpine redaptregistry.azurecr.io/redis:3.2-alpine`
-
 `docker push redaptregistry.azurecr.io/redis:3.2-alpine`
+
+##### Using Azure Cli
+
+`az acr import -n redaptregistry --source docker.io/library/redis:3.2-alpine --image redis:3.2-alpine --force`
 
 ### Attach the Registry to our Cluster
 

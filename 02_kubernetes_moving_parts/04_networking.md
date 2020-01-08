@@ -15,6 +15,17 @@ Kubernetes approaches networking somewhat differently than Docker does by defaul
 
 Each CNI handles this process in a slightly different way. The most popular open-source solutions are Flannel, Calico, and subsequently Canal.
 
+## Kubenet
+
+This is the default when creating an AKS cluster. It does not expose the pods ip addresses directly to anything outside of the cluster. It uses a network address space that is only internal to the cluster, and generally allows for more containers/pods per host, the default is 110.
+
+https://docs.microsoft.com/en-us/azure/aks/configure-kubenet
+
+## Azure CNI
+This option is a little more tricky to setup, but allows the pods to be addressed directly from outside the cluster. This means, that a CIDR is assigned to each node, that will pull from the kubernetes subnet, thus consuming ip addresses, the default is 30 per node.
+
+https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni
+
 ## Flannel
 
 A very simple overlay network that satisfies the Kubernetes requirements. This is the no-frills overlay typically used in small scale installations, as it has a small footprint, but many users at scale have reported success. If you don't need fine-grained policy control for inter-pod traffic, this may be the option for you! 

@@ -391,3 +391,33 @@ spec:
   storageClassName: managed-premium
   volumeMode: Filesystem
 ```
+
+
+#### Network Policy
+Network policies can be defined to restrict traffic between namespaces/pods within the cluster.
+
+
+For more information specific to AKS, you can follow up here:
+https://docs.microsoft.com/en-us/azure/aks/use-network-policies
+
+```
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: backend-policy
+  namespace: development
+spec:
+  podSelector:
+    matchLabels:
+      app: webapp
+      role: backend
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          purpose: development
+      podSelector:
+        matchLabels:
+          app: webapp
+          role: frontend
+```
