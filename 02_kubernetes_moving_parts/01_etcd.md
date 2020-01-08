@@ -11,12 +11,16 @@ It has a raft storage mechanism, running fewer nodes gives better performance, b
 ### etcd3
 The most recent version of etcd3 has been used by Kubernetes, since June 2016.
 
+`mkdir -p data`
+`mkdir -p backup-data`
+
 `export HostIP=$(ipconfig getifaddr en0)`
 
 ```
 docker run \
   -d -p 2379:2379 -p 2380:2380 \
   --volume=$(pwd)/data:/etcd-data \
+  --volume=$(pwd)/backup-data:/backup-data \
   --name etcd quay.io/coreos/etcd:latest \
   /usr/local/bin/etcd \
   --data-dir=/etcd-data --name node1 \
@@ -27,26 +31,26 @@ docker run \
 
 Check the status of your etcd endpoint.
 
-`docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP}:2379] endpoint health`
+`docker exec -e "ETCDCTL_API=3" etcd etcdctl --endpoints=http://${HostIP}:2379 endpoint health`
 
-`docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP}:2379] put foo1 bar1`
-`docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP}:2379] put foo2 bar2`
-`docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP}:2379] put foo3 bar3`
+`docker exec -e "ETCDCTL_API=3" etcd etcdctl --endpoints=http://${HostIP}:2379 put foo1 bar1`
+`docker exec -e "ETCDCTL_API=3" etcd etcdctl --endpoints=http://${HostIP}:2379 put foo2 bar2`
+`docker exec -e "ETCDCTL_API=3" etcd etcdctl --endpoints=http://${HostIP}:2379 put foo3 bar3`
 
 ```
-docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP}:2379] get \
+docker exec -e "ETCDCTL_API=3" etcd etcdctl --endpoints=http://${HostIP}:2379 get \
   --prefix --limit=2 foo --print-value-only
 ```
 
 ```
-docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP}:2379] get foo1 \
+docker exec -e "ETCDCTL_API=3" etcd etcdctl --endpoints=http://${HostIP}:2379 get foo1 \
   --print-value-only
 ```
 
 Kubernetes would us a more path based storage, since you can watch the parent for new child objects.
 
 ```
-docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP}:2379] put /registry/services/specs/default/kubernetes '{ 
+docker exec -e "ETCDCTL_API=3" etcd etcdctl --endpoints=http://${HostIP}:2379 put /registry/services/specs/default/kubernetes '{ 
     "apiVersion": "v1",
     "kind": "Service",
     "metadata": {
@@ -61,19 +65,19 @@ docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP
 ```
 
 ```
-docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP}:2379] \
+docker exec -e "ETCDCTL_API=3" etcd etcdctl --endpoints=http://${HostIP}:2379 \
   get /registry/services/specs/default/kubernetes \
   --print-value-only
 ```
 
 ```
-docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP}:2379] watch \
+docker exec -e "ETCDCTL_API=3" etcd etcdctl --endpoints=http://${HostIP}:2379 watch \
   --prefix /registry/services/specs/default
 ```
 
 *In Another Terminal, with `HostIP` properly set.*
 ```
-docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP}:2379] put /registry/services/specs/default/kubernetes2 '{ 
+docker exec -e "ETCDCTL_API=3" etcd etcdctl --endpoints=http://${HostIP}:2379 put /registry/services/specs/default/kubernetes2 '{ 
     "apiVersion": "v1",
     "kind": "Service",
     "metadata": {
@@ -111,9 +115,9 @@ It's worth mentioning that etcd also support time based leases, and keeps track 
 
 #### Back-Up
 ```
-docker run -it --volume=$(pwd)/backup-data:/backup-data \
-  -e ETCDCTL_API=3 tenstartups/etcdctl \
-  --endpoints=[http://${HostIP}:2379] \
+docker exec \
+  -e ETCDCTL_API=3 etcd etcdctl \
+  --endpoints=http://${HostIP}:2379 \
   snapshot save /backup-data/snapshot.db
 ```
 
@@ -128,8 +132,8 @@ rm -Rf $(pwd)/data
 ```
 docker run -it --volume=$(pwd)/data:/etcd-data \
   --volume=$(pwd)/backup-data:/backup-data \
-  -e ETCDCTL_API=3 --entrypoint /bin/sh tenstartups/etcdctl -c "etcdctl \
-  --endpoints=[http://${HostIP}:2379] \
+  -e ETCDCTL_API=3 --entrypoint /bin/sh quay.io/coreos/etcd:latest -c "etcdctl \
+  --endpoints=http://${HostIP}:2379 \
   snapshot restore /backup-data/snapshot.db --name node1 \
   --initial-advertise-peer-urls http://${HostIP}:2380 \
   --initial-cluster node1=http://${HostIP}:2380 && mv /node1.etcd/* /etcd-data"
@@ -150,7 +154,7 @@ docker run \
 ```
 
 ```
-docker run -it -e ETCDCTL_API=3 tenstartups/etcdctl --endpoints=[http://${HostIP}:2379] \
+docker exec -e "ETCDCTL_API=3" etcd etcdctl --endpoints=http://${HostIP}:2379 \
   get /registry/services/specs/default/kubernetes \
   --print-value-only
 ```
@@ -167,6 +171,7 @@ https://github.com/coreos/etcd/tree/master/hack/tls-setup
 docker kill etcd
 docker rm etcd
 rm -Rf $(pwd)/data
+rm -Rf $(pwd)/backup-data
 ```
 
 ## Additional Information
