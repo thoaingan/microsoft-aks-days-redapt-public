@@ -1,4 +1,7 @@
 ~**
 *.DS_Store
-04_demo_app_deployment/voting/data*
-04_demo_app_deployment/voting/backup-data*
+day_1/04_demo_app_deployment/voting/data*
+day_1/04_demo_app_deployment/voting/backup-data*
+
+day_2/03_deploy_to_aks/voting/data*
+day_2/03_deploy_to_aks/voting/backup-data
