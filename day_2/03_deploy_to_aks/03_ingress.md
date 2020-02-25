@@ -286,7 +286,7 @@ If you enabled it during the setup, AKS will come with a predefined ingress cont
 
 https://docs.microsoft.com/en-us/azure/aks/http-application-routing
 
-With that enabled, you can run the following to see an [example](/http_lb_example.yaml) working:
+With that enabled, you can run the following to see an [example](./http_lb_example.yaml) working:
 
 ```
 kubectl apply -f http_lb_example.yaml 
