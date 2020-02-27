@@ -8,7 +8,7 @@ This is a two part workshop featuring AKS usage and deployments, as well as moni
 
 ## Table of Contents
 
-1. [Review of Relevant Day 1 Items](01_review)
+1. [Review of Day 1](01_review)
 2. [Containerization](02_containerization)
 3. [Deploy to AKS](03_deploy_to_aks)
 4. [Debugging](04_debugging)
