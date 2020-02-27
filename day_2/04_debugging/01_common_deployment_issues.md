@@ -19,3 +19,13 @@ If it references configmaps or secrets, you can `kubectl get configmap CONFIGMAP
 Note: Secrets are base64 encoded, so to see real values would need to decode the data values.
 
 In the event, that a secret or configmap does not exist, or a volume had issues mounting, that would appear in the pod events at the bottom of the `describe` output as an error message. If there are any readiness or liveness probes defined, you can also see any related failures in the pod events.
+
+## Connect to the Container
+
+If you have verified that the configuration is good, and the logs are indicating that something within the container is wrong, it makes sense to connect to the container and do some manual inspection.
+
+You can effectively ssh into a container by using the `kubectl exec` command with the `sh` or `bash` entrypoint, for linux containers.
+
+`kubectl exec -it POD_NAME -c CONTAINER_NAME -- sh`
+
+From within this shell context, you can check various files, and manually run commands to probe/test the container for issues. This process assumes that the container is running and the process its following is not crashing/exiting early, but there is some other issue that needs checked.
