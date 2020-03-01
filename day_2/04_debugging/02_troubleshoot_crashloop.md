@@ -69,4 +69,8 @@ Now, this container wont serve its normal process, but I can connect to the cont
 
 `kubectl exec -it POD_NAME -- sh`
 
+From this context, I can run commands and inspect the contents of the container as configured, with the only difference being, the normal process is skipped in favor of watching our sleep. At the end of our sleep timer, the container will crash and restart again, so give yourself a reasonable ammount of time, if you plan on doing any long-running commands.
+
+
+
 
