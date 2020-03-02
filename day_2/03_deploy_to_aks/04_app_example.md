@@ -8,9 +8,14 @@ You can build it using the following command(s), but you should use the name of 
 
 ### Build & Push the App Container
 
-`docker build . -t redaptregistry.azurecr.io/favorite-beer:v1`
+cd into `spa-react-netcore-redis/voting`
+
+`docker build -f voting/Dockerfile . -t redaptregistry.azurecr.io/favorite-beer:v1`
+
 `docker tag redaptregistry.azurecr.io/favorite-beer:v1 redaptregistry.azurecr.io/favorite-beer:latest`
+
 `docker push redaptregistry.azurecr.io/favorite-beer:v1`
+
 `docker push redaptregistry.azurecr.io/favorite-beer:latest`
 
 ##### Using Azure Cli
