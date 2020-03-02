@@ -2,6 +2,12 @@
 
 Note: The examples in the following sections have been borrowed heavily from the [official Kubernetes docs](https://kubernetes.io/docs/concepts/services-networking/ingress/).
 
+*Note AKS http ingress requires the annotations for the http class*
+
+`kubernetes.io/ingress.class: addon-http-application-routing`
+
+https://docs.microsoft.com/en-us/azure/aks/http-application-routing#use-http-routing
+
 ## Overview of Ingress
 
 An Ingress is an API object that manages external access to the services in a cluster, typically HTTP.
