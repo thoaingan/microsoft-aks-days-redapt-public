@@ -15,7 +15,9 @@ You can build it using the following command(s), but you should use the name of 
 
 ##### Using Azure Cli
 
-`az acr build -t favorite-beer:v1 -t favorite-beer:latest --registry redaptregistry --file Dockerfile .`
+From the `spa-netcore-react/voting` directory:
+
+`az acr build -t favorite-beer:v1 -t favorite-beer:latest --registry redaptregistry --file voting/Dockerfile .`
 
 ### Download & Push the Redis Container
 
