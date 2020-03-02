@@ -41,7 +41,7 @@ Click `Save`, and wait for the connection to be created.
 You can also create custom service endpoints/connections.
 https://docs.microsoft.com/en-us/azure/devops/extend/develop/service-endpoints?view=azure-devops
 
-### Azure Kubernetes Service Environment
+### Azure Kubernetes Service Environment + Service Connection
 
 On the pipelines page, select `Create environment` name it `AKS Cluster Demo`, and select `Kubernetes` as the Resource, click `Next`.
 
@@ -55,21 +55,7 @@ For Namespace, in this context, we will chose the `Existing` `default`.
 
 Click the `Validate and create` button, to kick off the creation process.
 
-The final step here is to allow the Service account for ADO to have appropriate Kubernetes API access.
-
-Connect to the kubernetes cluster. If you are using Azure CLI, you wont need the install-cli step.
-
-```
-az aks install-cli
-az aks get-credentials -n jmeisnertest -g jm-rgp
-```
-
-Apply the yaml thats in this directory, of the demo project.
-
-```
-kubectl apply -f ado_permissions.yaml
-kubectl apply -f day_2/06_azure_devops/02_automation_pipelines/ado_permissions.yaml 
-```
+This will automatically setup a Service Connection for our AKS cluster, which we will use later.
 
 ### Creating a Pipeline
 
@@ -83,7 +69,7 @@ If you are prompted to `Approve & Install Azure Pipelines` it should default to 
 
 Following the instructions on any prompts that occur for single-sign on services, you should land on a page with the title `Review your pipeline YAML`.
 
-*Note: The following is what would generate for the first time, if there was no azure-pipeline.yaml defined. For our application, we needed to additionally define buildContextPath variable and buildContext in the task at this step.*
+*Note: The default yaml that generates for your own applications would not include all of the steps here.*
 
 ```
 # Docker
@@ -98,12 +84,17 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '79742df5-1b3d-4fa3-8fc4-153b26e8bb91'
+  dockerRegistryServiceConnection: '2a175992-247b-463c-8f5e-d20a95675f2c'
   imageRepository: 'favoritebeer'
   containerRegistry: 'jmeisnertestacr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/spa-react-netcore-redis/voting/voting/Dockerfile'
   buildContextPath: '$(Build.SourcesDirectory)/spa-react-netcore-redis/voting'
+  helmChartPath: '$(Build.SourcesDirectory)/spa-react-netcore-redis/voting/voting/k8s/Chart'
+  valueFilePath: '$(Build.SourcesDirectory)/spa-react-netcore-redis/voting/voting/k8s/Chart/values.yaml'
+  aksServiceConnection: 'd096e26f-577c-4fe9-9ec0-56c53100cec5'
   tag: '$(Build.BuildId)'
+  latestTag: '$(Build.SourceBranchName)-latest'
+  releaseName: 'demo'
   
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -127,6 +118,37 @@ stages:
         buildContext: $(buildContextPath)
         tags: |
           $(tag)
+          $(latestTag)
+
+- stage: Deploy
+  displayName: Deploy to Cluster
+  jobs:  
+  - job: Deploy
+    displayName: Deploy
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+
+    - task: HelmInstaller@1
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+      displayName: Helm installer
+      inputs: 
+        helmVersionToInstall: 3.0.2
+
+    - task: HelmDeploy@0
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+      displayName: Deploy to Demo
+      inputs:
+        connectionType: Kubernetes Service Connection
+        kubernetesServiceEndpoint: $(aksServiceConnection)
+        command: upgrade
+        overrideValues: 'image.repository=$(containerRegistry)/$(imageRepository),image.tag=$(tag)'
+        chartType: FilePath
+        chartPath: $(helmChartPath)
+        valueFile: $(valueFilePath)
+        releaseName: $(releaseName)
+        install: true
+        failOnStderr: false
 ```
 
 At this step, it should show you what is currently in the github, which may not match what you are seeing above.
@@ -136,6 +158,16 @@ What you should see is `tag: '$(Build.BuildId)'` under the variables section. Go
 In my case, I change it to `tag: 'jm-$(Build.BuildId)'` for testing purposes, the main takeaway, is that you may want to choose a tag thats unique across pipelines, for example to test changes to the pipeline itself without impacting images being built on the mainline.
 
 You will also see `dockerRegistryServiceConnection` and `containerRegistry` which will need to be changed to reflect the connection created previously.
+
+The final step, would be to connect the AKS Service connection to our deploy step.
+
+You can find the value for this on the `Project Settings -> Service Connections` page. 
+
+If you created an environment, in the previous steps, You will see in this list a Service Connection that matches this format: `<EnvName>-<clusterName>-<nameSpace>-XXXXXXXXXXXX`, click into the details page.
+
+In the browser, in the url bar, you will see `_settings/adminservices?resourceId=XXXX-XXXX-XXXX-XXXXX`. Grab the resourceId value and put it into your azure-pipelines.yaml for the following variable.
+
+`aksServiceConnection: 'XXXX-XXXX-XXXX-XXXXX'`
 
 If you made edits select `Save and run` twice, to confirm `Commit directly to the master branch`, if you did not, simply select `Run`.
 
