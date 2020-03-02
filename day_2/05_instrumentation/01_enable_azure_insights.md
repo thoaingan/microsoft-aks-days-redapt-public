@@ -1,6 +1,8 @@
 # Enable Azure Insights
 
-In the traditional Azure VM landscape, you would install the OMSAgent onto the machines, which allows them to report metrics to the Azure Monitor portal.
+We enabled Azure Insights earlier in an earlier section, this serves to explain a little more detail.
+
+In the traditional Azure VM landscape, you would install the OMSAgent onto the machines, which allows them to report metrics to the Azure Monitor portal. 
 
 With AKS, the story is similar, but its leveraging the concept of kubernetes DaemonSet to deploy an OMSAgent container to every host. This container and DaemonSet is optimized for grabbing logs, and metrics which get forwarded to Azure.
 

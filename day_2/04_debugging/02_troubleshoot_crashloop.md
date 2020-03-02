@@ -36,6 +36,8 @@ Because no command or args are supplied to the container, its using the default 
 
 If we edit the yaml, we can ovveride the command to sleep for 10 minutes, which will allow us time to get in and inspect.
 
+`kubectl edit deployment nginx-deployment`
+
 ```
 apiVersion: apps/v1 
 kind: Deployment
@@ -70,3 +72,14 @@ Now, this container wont serve its normal process, but I can connect to the cont
 `kubectl exec -it POD_NAME -- sh`
 
 From this context, I can run commands and inspect the contents of the container as configured, with the only difference being, the normal process is skipped in favor of watching our sleep. At the end of our sleep timer, the container will crash and restart again, so give yourself a reasonable ammount of time, if you plan on doing any long-running commands.
+
+Ideally, your workload will have readiness probes defined, and such the new deployment will be unable to successfully rollout, since sleep wont successfully pass the readiness probe. However, the container/pod(s) based on surge will still run and restart as the timer ends.
+
+
+Alternatively, you can define a brand new deployment, and modify options/configuration and run it outside of the normal deployment, to minimize impact.
+
+---
+
+Once you are finished, with the probing, you can rollback to the previous verions using the rollout undo command, which will simply delete any containers modified to sleep.
+
+`kubectl rollout undo deployment/nginx-deployment`
