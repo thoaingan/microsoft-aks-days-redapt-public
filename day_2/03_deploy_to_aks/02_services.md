@@ -29,7 +29,7 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 9376
+    targetPort: 80
 ```
 
 ```
@@ -51,8 +51,8 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 9376
-    nodePort: 31560
+    targetPort: 80
+    nodePort: 31561
   type: NodePort
 ```
 
@@ -69,7 +69,7 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 9376
+    targetPort: 80
     nodePort: 31560
   type: LoadBalancer
 ```
